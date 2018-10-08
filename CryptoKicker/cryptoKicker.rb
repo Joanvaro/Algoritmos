@@ -18,8 +18,16 @@ end
 
 def getDictionary()
   keyArray = Array.new
+  sizeArray = Array.new
+
   keyArray = $keyMessage.split(" ")
 
+  keyArray.each do |val|
+    sizeArray.push(val.size)
+  end
+
+  # TODO: get the cryted message by parragraph and remove the key
+  puts sizeArray
   return keyArray
 end
 
