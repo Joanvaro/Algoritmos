@@ -26,13 +26,33 @@ def getDictionary()
     sizeArray.push(val.size)
   end
 
-  # TODO: get the cryted message by parragraph and remove the key
-  puts sizeArray
+  biggerWord = sizeArray.sort.pop() 
+
+  $criptedMessage.map! {|x| x.split(" ")}
+  $criptedMessage.flatten!
+
+  $criptedMessage.each do |msg|
+    if msg.size == biggerWord then
+      $index = $criptedMessage.index(msg) - 2 
+      break
+    end
+  end
+
+  (0...keyArray.size).each do |x|
+    puts "Error" if $criptedMessage[x + $index].size != keyArray[x].size
+    
+    (0...keyArray[x].size).each do |char|
+      unless $dictionary.has_key?(keyArray[x][char]) then
+        $dictionary[keyArray[x][char]] = $criptedMessage[x + $index][char]
+      end
+    end
+  end
+
+  puts "$criptedMessage[#{$index}] = #{$criptedMessage[$index]}"
+
   return keyArray
 end
 
 cases = readFile("message.txt")
 key = getDictionary()
-
-puts cases
-puts key
+puts $dictionary
