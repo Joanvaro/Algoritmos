@@ -73,6 +73,10 @@ def decodeMessage()
 	puts realMessage
 end	
 
-cases = readFile("message.txt")
-key = getDictionary()
-decodeMessage()
+cases = readFile(ARGV[0])
+
+cases.to_i.times do |paraghrap|
+  #TODO: get the message by parragrahp
+  key = getDictionary()
+  decodeMessage()
+end
