@@ -39,20 +39,40 @@ def getDictionary()
   end
 
   (0...keyArray.size).each do |x|
-    puts "Error" if $criptedMessage[x + $index].size != keyArray[x].size
+    if $criptedMessage[x + $index].size != keyArray[x].size then
+			puts "NO SE ENCONTRO SOLUCION"
+			exit(1)
+		end
     
     (0...keyArray[x].size).each do |char|
-      unless $dictionary.has_key?(keyArray[x][char]) then
-        $dictionary[keyArray[x][char]] = $criptedMessage[x + $index][char]
+      unless $dictionary.has_key?($criptedMessage[x + $index][char]) then
+        $dictionary[$criptedMessage[x + $index][char]] = keyArray[x][char]
       end
     end
   end
 
-  puts "$criptedMessage[#{$index}] = #{$criptedMessage[$index]}"
+  (0...keyArray.size).each do |key|
+    $criptedMessage.delete_at($index)
+  end
 
   return keyArray
+	
 end
+
+def decodeMessage()
+	realMessage = String.new
+	message = $criptedMessage.join(" ")
+	
+	message.each_char do |c|
+		if c == " " then
+			realMessage.insert(-1, " ")
+		else
+			realMessage.insert(-1, $dictionary[c])
+		end
+	end
+	puts realMessage
+end	
 
 cases = readFile("message.txt")
 key = getDictionary()
-puts $dictionary
+decodeMessage()
