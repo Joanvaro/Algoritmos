@@ -100,5 +100,6 @@ cases.times do |paraghrap|
   unless key == nil then
     decodeMessage(paraghrap)
   end
+  $dictionary.clear
   puts if paraghrap != (cases - 1) 
 end
