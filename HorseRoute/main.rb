@@ -1,21 +1,19 @@
 #!/usr/bin/ruby
 
-require 'matrix'
-
 $HorsePosition = Array.new
 $WhitePositions = Array.new
 $BlackPositions = Array.new
 $Board = Array.new(8) { Array.new(8) }
 
 def readFile(filename)
-	coordinates = Array.new 
+  coordinates = Array.new 
 	
-	data = File.readlines(filename)
+  data = File.readlines(filename)
   data.collect! { |x| x.delete("\n") }
 	
-	$HorsePosition = data.delete_at(0).split(',')
-	$WhitePositions = data.delete_at(0).split(',')
-	$BlackPositions =  data.delete_at(0).split(',')
+  $HorsePosition = data.delete_at(0).split(',')
+  $WhitePositions = data.delete_at(0).split(',')
+  $BlackPositions =  data.delete_at(0).split(',')
 	
 end
 
