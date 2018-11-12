@@ -3,7 +3,8 @@
 $HorsePosition = Array.new
 $WhitePositions = Array.new
 $BlackPositions = Array.new
-$Board = Array.new(8) { Array.new(8) }
+$Board = Array.new(4) { Array.new(4) }
+$Tree = Array.new
 
 def readFile(filename)
   data = File.readlines(filename)
@@ -16,7 +17,7 @@ def readFile(filename)
 end
 
 def isInsideBoard(x,y,n)
-  return (x >= 1 and x <= n and y >= 1 and y <= n) ? true : false
+  return (x >= 0 and x < n and y >= 0 and y < n) ? true : false
 end
 
 def fillBoard()
@@ -31,10 +32,12 @@ def fillBoard()
   count.times do |val|
     $Board[$BlackPositions[2*val+1].to_i - 1][$BlackPositions[2*val].to_i - 1] = "B"
   end
+
+  $Tree.push(["#{$HorsePosition[0].to_i  - 1}#{$HorsePosition[1].to_i - 1}"])
   
 end
 
-def moveHorse()
+def findPositions(node = nil)
   dx = [-2,-1,1,2,-2,-1,1,2]
   dy = [-1,-2,-2,-1,1,2,2,1]
 
@@ -48,11 +51,43 @@ def moveHorse()
     tmpX = movements[0] + dx[mov] - 1
     tmpY = movements[1] + dy[mov] - 1
 
-    if ( isInsideBoard(tmpX,tmpY,8) and ($Board[tmpY][tmpX] != "B") ) then
+    if ( isInsideBoard(tmpX,tmpY,4) and ($Board[tmpY][tmpX] != "B") ) then
+      if node then
+        if !node.include?("#{tmpX}#{tmpY}") then
+          puts "node = #{node}"
+          tmpArray = []
+          tmpArray.replace(node)
+          tmpArray.push("#{tmpX}#{tmpY}")
+          puts "tmpArray = #{tmpArray}"
+          puts "x = #{tmpX}, y = #{tmpY}"
+          $Tree.push(tmpArray)
+        end
+      else
+        tmpArray = ["#{tmpX}#{tmpY}"]
+        $Tree.push(tmpArray)
+      end
+
+      #$Tree.push(tmpArray)
       $Board[tmpY][tmpX] = "S"
-      #puts "x = #{tmpX}, y = #{tmpY}"
     end
   end
+end
+
+def moveHorse()
+  node = []
+
+  puts "tmpArray[moveHorse] = #{$Tree}"
+  tmpArray = $Tree.pop
+  node.replace(tmpArray)
+  #puts "node = #{node}"
+
+  tmpPosition = tmpArray.pop.chars
+  #puts "Positions = #{tmpPosition}"
+
+  $HorsePosition[0] = tmpPosition[0].to_i + 1
+  $HorsePosition[1] = tmpPosition[1].to_i + 1
+
+  findPositions(node)
 end
 
 readFile(ARGV[0])
@@ -60,8 +95,13 @@ puts "Horse = #{$HorsePosition}"
 puts "White = #{$WhitePositions}"
 puts "Black = #{$BlackPositions}"
 
-puts isInsideBoard(4,9,8)
 fillBoard()
-moveHorse()
+
+until $Tree.empty? do
+ moveHorse()
+ break if $Tree[-1][-1] == "03"
+end
 
 $Board.each { |x| puts "#{x}" }
+puts
+puts "Tree = #{$Tree[-1]}"
