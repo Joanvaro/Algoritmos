@@ -25,7 +25,13 @@ def fillBoard()
   count = $WhitePositions.size() / 2
   count.times do |val|
     $Board[$WhitePositions[2*val+1].to_i - 1][$WhitePositions[2*val].to_i - 1] = "W"
+
+    $WhitePositions[2*val] = "#{$WhitePositions[2*val]}#{$WhitePositions[2*val+1]}"
+    $WhitePositions[2*val+1] = nil
+
   end
+
+  $WhitePositions.compact!
 
   # Fill black pieces
   count = $BlackPositions.size() / 2
@@ -54,12 +60,12 @@ def findPositions(node = nil)
     if ( isInsideBoard(tmpX,tmpY,4) and ($Board[tmpY][tmpX] != "B") ) then
       if node then
         if !node.include?("#{tmpX}#{tmpY}") then
-          puts "node = #{node}"
+          #puts "node = #{node}"
           tmpArray = []
           tmpArray.replace(node)
           tmpArray.push("#{tmpX}#{tmpY}")
-          puts "tmpArray = #{tmpArray}"
-          puts "x = #{tmpX}, y = #{tmpY}"
+          #puts "tmpArray = #{tmpArray}"
+          #puts "x = #{tmpX}, y = #{tmpY}"
           $Tree.push(tmpArray)
         end
       else
@@ -76,7 +82,7 @@ end
 def moveHorse()
   node = []
 
-  puts "tmpArray[moveHorse] = #{$Tree}"
+  #puts "tmpArray[moveHorse] = #{$Tree}"
   tmpArray = $Tree.pop
   node.replace(tmpArray)
   #puts "node = #{node}"
@@ -91,17 +97,28 @@ def moveHorse()
 end
 
 readFile(ARGV[0])
+fillBoard()
 puts "Horse = #{$HorsePosition}"
 puts "White = #{$WhitePositions}"
 puts "Black = #{$BlackPositions}"
 
-fillBoard()
+until $WhitePositions.empty? do
+  until $Tree.empty? do
+    moveHorse()
+    if $WhitePositions.include?($Tree[-1][-1]) then
+      puts "Tree = #{$Tree[-1]}"
 
-until $Tree.empty? do
- moveHorse()
- break if $Tree[-1][-1] == "03"
+      piecePosition = ["#{$Tree[-1][-1]}"]
+
+      $HorsePosition[0] = piecePosition[0]
+      $HorsePosition[1] = piecePosition[1]
+
+      $WhitePositions.delete($Tree[-1][-1])
+      $Tree.clear
+      $Tree.push(piecePosition)
+      break
+    end
+  end
 end
 
 $Board.each { |x| puts "#{x}" }
-puts
-puts "Tree = #{$Tree[-1]}"
