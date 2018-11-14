@@ -1,9 +1,10 @@
 #!/usr/bin/ruby
 
+$BoardSize = 4
 $HorsePosition = Array.new
 $WhitePositions = Array.new
 $BlackPositions = Array.new
-$Board = Array.new(4) { Array.new(4) }
+$Board = Array.new($BoardSize) { Array.new($BoardSize) }
 $Tree = Array.new
 
 def readFile(filename)
@@ -16,8 +17,8 @@ def readFile(filename)
 	
 end
 
-def isInsideBoard(x,y,n)
-  return (x >= 0 and x < n and y >= 0 and y < n) ? true : false
+def isInsideBoard(x,y)
+  return (x >= 0 and x < $BoardSize and y >= 0 and y < $BoardSize) ? true : false
 end
 
 def fillBoard()
@@ -62,7 +63,7 @@ def findPositions(node = nil)
     tmpX = movements[0] + dx[mov] - 1
     tmpY = movements[1] + dy[mov] - 1
 
-    if ( isInsideBoard(tmpX,tmpY,4) and ($Board[tmpY][tmpX] != "B") ) then
+    if ( isInsideBoard(tmpX,tmpY) and ($Board[tmpY][tmpX] != "B") ) then
       if node then
         if !node.include?("#{tmpX}#{tmpY}") then
           tmpArray = []
@@ -96,6 +97,7 @@ end
 
 readFile(ARGV[0])
 fillBoard()
+piece = 0
 
 puts "Horse = #{$HorsePosition}"
 puts "White = #{$WhitePositions}"
@@ -107,12 +109,10 @@ until $WhitePositions.empty? do
     moveHorse()
 
     if $WhitePositions.include?($Tree[-1][-1]) then
-      puts "Tree = #{$Tree[-1]}"
+      piece += 1
+      puts "Piece #{piece} = #{$Tree[-1]}"
 
       piecePosition = ["#{$Tree[-1][-1]}"]
-
-      $HorsePosition[0] = piecePosition[0]
-      $HorsePosition[1] = piecePosition[1]
 
       $WhitePositions.delete($Tree[-1][-1])
       $Tree.clear
