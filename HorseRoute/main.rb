@@ -63,16 +63,18 @@ def findPositions(node = nil)
     tmpX = movements[0] + dx[mov] - 1
     tmpY = movements[1] + dy[mov] - 1
 
-    if ( isInsideBoard(tmpX,tmpY) and ($Board[tmpY][tmpX] != "B") ) then
+    position = "#{tmpX}#{tmpY}"
+
+    if ( isInsideBoard(tmpX,tmpY) and not ($BlackPositions.include?(position)) ) then
       if node then
-        if !node.include?("#{tmpX}#{tmpY}") then
+        if !node.include?(position) then
           tmpArray = []
           tmpArray.replace(node)
-          tmpArray.push("#{tmpX}#{tmpY}")
+          tmpArray.push(position)
           $Tree.push(tmpArray)
         end
       else
-        tmpArray = ["#{tmpX}#{tmpY}"]
+        tmpArray = [position]
         $Tree.push(tmpArray)
       end
 
