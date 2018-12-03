@@ -2,7 +2,7 @@
 
 require './Graph.rb'
 
-def BFS(root_node, search_value)
+def BFS(root_node, search_value, relationship)
   visited = []
   to_visit = []
 
@@ -12,8 +12,14 @@ def BFS(root_node, search_value)
   while !to_visit.empty? do
     current_node = to_visit.shift
     return true if current_node.value == search_value
+  
+    if relationship.eql?("friend") then
+      arry = current_node.adjacent_nodes_friends
+    else
+      arry = current_node.adjacent_nodes_enemies
+    end
 
-    current_node.adjacent_nodes.each do |node|
+    arry.each do |node|
       if !visited.include?(node) then
         visited << node
         to_visit << node
@@ -21,31 +27,44 @@ def BFS(root_node, search_value)
     end # each
   end # while
 
+  return false
+
 end
 
 def setFriends(x,y)
-  # Adding nodes to the graph if exist do not raise an error
-  $FriendGraph.add_node(x)
-  $FriendGraph.add_node(y)
+  ret = BFS(x, y.value, "enemy")
 
-  $FriendGraph.add_edge(x,y)
+  if ret then
+    puts "-1"
+  else
+    # Adding nodes to the graph if exist do not raise an error
+    $FriendGraph.add_node(x)
+    $FriendGraph.add_node(y)
+
+    $FriendGraph.add_edge(x,y, "friend")
+  end
 end
 
 def setEnemies(x,y)
-  # Adding nodes to the graph if exist do not raise an error
-  $EnemyGraph.add_node(x)
-  $EnemyGraph.add_node(y)
+  ret = BFS(x, y.value, "friend")
 
-  $FrienGraph.add_edge(x,y)
+  if ret then
+    puts "-1"
+  else
+    # Adding nodes to the graph if exist do not raise an error
+    $FriendGraph.add_node(x)
+    $FriendGraph.add_node(y)
+
+    $FriendGraph.add_edge(x,y, "enemy")
+  end
 end
 
 def areFriends(x,y)
-  #TODO check relationships
-  return BFS(x,y.value) ? 1 : 0
+  return BFS(x,y.value, "friend") ? 1 : 0
 end
 
 def areEnemies(x,y)
-  #TODO check relationships
+  return BFS(x,y.value, "enemy") ? 1 : 0
 end
 
 $FriendGraph = Graph.new()
@@ -62,5 +81,11 @@ setFriends(node0, node1)
 setFriends(node0, node3)
 setFriends(node1, node4)
 
+setEnemies(node2, node5)
+
 puts areFriends(node0, node4)
 puts areFriends(node0, node5)
+
+puts areEnemies(node2, node5)
+
+setEnemies(node0, node4)
