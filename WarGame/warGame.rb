@@ -47,17 +47,15 @@ end
 
 def setFriends(x,y)
   #TODO Checar el error de checkeo
-  puts "x = #{x.value} y = #{y.value}"
-  puts  BFS(x, y.value, "enemy")
   if BFS(x, y.value, "enemy") then
     puts "-1"
   else
     x.adjacent_nodes_friends.each do |friend|
-      #puts "friend = #{friend.value} x = #{x.value}"
-      #puts "-1" if BFS(friend, y.value, "enemy")
-      puts
-      puts BFS(friend, y.value, "enemy")
-      puts
+      puts "-1" if BFS(friend, y.value, "enemy")
+    end
+
+    y.adjacent_nodes_friends.each do |friend|
+      puts "-1" if BFS(friend, x.value, "enemy")
     end
 
     # Adding nodes to the graph if exist do not raise an error
