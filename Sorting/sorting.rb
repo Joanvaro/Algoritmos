@@ -1,5 +1,16 @@
 #! /usr/bin/ruby
 
+require 'time'
+
+startTime = Time.now
+
+def readFile(filename)
+  data = File.readlines(filename)
+  $DataArray = data[0].split(" ")
+
+  $DataArray.collect! { |x| x.to_i }
+end
+
 def bubbleSort(list)
   return list if list.size <= 1
   swapped = true
@@ -65,18 +76,21 @@ def quickSort(list, left_index = 0, right_index = nil)
   list
 end
 
-list = [34,64,12,25,99,23,1,4,67,4]
-puts "Original list = #{list}"
+readFile(ARGV[0])
 
-list1 = bubbleSort(list)
-puts "Bubble Sorted list = #{list1}"
-list = [34,64,12,25,99,23,1,4,67,4]
-puts "Bubble Sorted list = #{list}"
+puts "Original Array = #{$DataArray}"
 
-list2 = insertionSort(list)
-puts "Insertion Sorted list = #{list2}"
-list = [34,64,12,25,99,23,1,4,67,4]
-puts "Insertion Sorted list = #{list}"
+case ARGV[1]
+when "bubble"
+  list = bubbleSort($DataArray)
+when "insertion"
+  list = insertionSort($DataArray)
+when "quick"
+  list = quickSort($DataArray)
+end
 
-list3 = quickSort(list, 0, list.size - 1)
-puts "Quick Sorting list = #{list}"
+endTime = Time.now
+
+puts "Sorted Array = #{list}"
+puts
+puts "Total Time of execution #{endTime - startTime} seconds"
