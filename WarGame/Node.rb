@@ -20,8 +20,12 @@ class Node
           friend.adjacent_nodes_friends << adjacent_node 
         end
 
-        friend.adjacent_nodes_enemies.each do |newFriend|
+        friend.adjacent_nodes_friends.each do |newFriend|
           @adjacent_nodes_friends << newFriend unless @adjacent_nodes_friends.include?(newFriend)
+        end
+
+        friend.adjacent_nodes_enemies.each do |newEnemy|
+          @adjacent_nodes_enemies << newEnemy unless @adjacent_nodes_enemies.include?(newEnemy)
         end
       end
 
@@ -30,11 +34,17 @@ class Node
 
       @adjacent_nodes_enemies.each do |enemy|
         unless enemy.adjacent_nodes_enemies.include?(adjacent_node) then
-          enemy.adjacent_nodes_enemies << adjacent_node
+          #puts "hello" if enemy.value.eql?(adjacent_node.value)
+          puts "#{enemy.value} -> #{adjacent_node.value}"
+          enemy.adjacent_nodes_enemies << adjacent_node unless enemy.value.eql?(adjacent_node.value) 
         end
 
         enemy.adjacent_nodes_friends.each do |newEnemy|
           @adjacent_nodes_enemies << newEnemy unless @adjacent_nodes_enemies.include?(newEnemy)
+        end
+        
+        enemy.adjacent_nodes_enemies.each do |newFriend|
+          @adjacent_nodes_friends << newFriend unless @adjacent_nodes_friends.include?(newFriend)
         end
         
       end

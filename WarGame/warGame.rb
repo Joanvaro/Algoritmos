@@ -48,6 +48,8 @@ end
 
 def setFriends(x,y)
   if x.adjacent_nodes_enemies.include?(y) then
+    #x.adjacent_nodes_enemies.each { |t| puts "Enemy of #{x.value} -> #{t.value}" }
+    puts "Error set friends #{x.value} #{y.value}"
     return -1
   else
     x.adjacent_nodes_friends.each do |friend|
@@ -68,7 +70,9 @@ def setFriends(x,y)
 end
 
 def setEnemies(x,y)
-  if x.adjacent_nodes_enemies.include?(y) then
+  #x.adjacent_nodes_friends.each { |w| puts "#{x.value} -> #{w.value}" }
+  if x.adjacent_nodes_friends.include?(y) then
+    puts "Error set enemies #{x.value} #{y.value}"
     return -1
   else
     x.adjacent_nodes_friends.each do |friend|
